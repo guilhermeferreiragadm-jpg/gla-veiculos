@@ -1,3 +1,5 @@
+import { fetchSheetCars } from "./fetch-sheet.js";
+
 function getFiltros() {
   const tipoBtn = document.querySelector(".filter-btn.active");
   const [precoMin, precoMax] = (document.getElementById("filtroPreco")?.value || "todos").split("-");
