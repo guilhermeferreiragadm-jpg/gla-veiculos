@@ -1,3 +1,5 @@
+import { fetchSheetCars } from "./fetch-sheet.js";
+
 function getCarIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
