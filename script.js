@@ -88,7 +88,7 @@ function renderCatalogo(list) {
           <div class="car-price">${formatPreco(car.preco)}</div>
           <div class="car-actions">
             <a class="car-cta" href="carro.html?id=${car.id}">Ver detalhes</a>
-            <a class="car-cta car-cta-whatsapp" href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" rel="noopener">Tenho interesse</a>
+            <a class="car-cta car-cta-whatsapp" href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" rel="noopener" data-lead-interesse="1" data-veiculo-id="${car.veiculoId || ""}" data-modelo="${car.modelo}">Tenho interesse</a>
           </div>
         </div>
       </div>`;
@@ -152,8 +152,29 @@ function setupAvalieForm() {
     ];
     if (obs) lines.push(`Observações: ${obs}`);
 
+    if (typeof registrarLead === "function") {
+      const mensagemLead = [`Avaliação de veículo: ${modelo} (${ano})`, obs ? `Observações: ${obs}` : null]
+        .filter(Boolean)
+        .join(" — ");
+      // Não espera a resposta: o WhatsApp precisa abrir mesmo que o registro falhe ou demore.
+      registrarLead({ nome, telefone, mensagem: mensagemLead, origem: "site_avaliacao" });
+    }
+
     const msg = encodeURIComponent(lines.join("\n"));
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank", "noopener");
+  });
+}
+
+function setupInteresseButtons() {
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("[data-lead-interesse]");
+    if (!link || typeof registrarLead !== "function") return;
+    registrarLead({
+      nome: "Contato pelo site",
+      veiculoId: link.dataset.veiculoId || null,
+      mensagem: `Interesse no veículo: ${link.dataset.modelo || ""}`,
+      origem: "site_interesse",
+    });
   });
 }
 
@@ -206,10 +227,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderCatalogo(cars);
   setupFilters();
   setupAvalieForm();
+  setupInteresseButtons();
   setupCounters();
   setupReveal();
 
-  const sheetCars = await fetchSheetCars();
+  const sheetCars = await fetchCarrosPublicados();
   if (sheetCars && sheetCars.length) {
     cars.length = 0;
     cars.push(...sheetCars);

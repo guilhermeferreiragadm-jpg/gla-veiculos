@@ -50,7 +50,7 @@ function renderCarDetail(car) {
       </div>
 
       <div class="carro-actions">
-        <a class="btn btn-primary" href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" rel="noopener">Tenho interesse — falar no WhatsApp</a>
+        <a class="btn btn-primary" href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" rel="noopener" data-lead-interesse="1" data-veiculo-id="${car.veiculoId || ""}" data-modelo="${car.modelo}">Tenho interesse — falar no WhatsApp</a>
         <button type="button" class="btn btn-outline-dark" id="btnCompartilhar">Compartilhar</button>
       </div>
       <p class="compartilhar-feedback" id="compartilharFeedback" aria-live="polite"></p>
@@ -134,7 +134,7 @@ function renderRelacionados(carAtual) {
           <div class="car-price">${formatPreco(car.preco)}</div>
           <div class="car-actions">
             <a class="car-cta" href="carro.html?id=${car.id}">Ver detalhes</a>
-            <a class="car-cta car-cta-whatsapp" href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" rel="noopener">Tenho interesse</a>
+            <a class="car-cta car-cta-whatsapp" href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" rel="noopener" data-lead-interesse="1" data-veiculo-id="${car.veiculoId || ""}" data-modelo="${car.modelo}">Tenho interesse</a>
           </div>
         </div>
       </div>`;
@@ -144,8 +144,21 @@ function renderRelacionados(carAtual) {
   document.getElementById("relacionadosSection").hidden = false;
 }
 
+function setupInteresseButtons() {
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("[data-lead-interesse]");
+    if (!link || typeof registrarLead !== "function") return;
+    registrarLead({
+      nome: "Contato pelo site",
+      veiculoId: link.dataset.veiculoId || null,
+      mensagem: `Interesse no veículo: ${link.dataset.modelo || ""}`,
+      origem: "site_interesse",
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
-  const sheetCars = await fetchSheetCars();
+  const sheetCars = await fetchCarrosPublicados();
   if (sheetCars && sheetCars.length) {
     cars.length = 0;
     cars.push(...sheetCars);
@@ -159,4 +172,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   renderCarDetail(car);
   renderRelacionados(car);
+  setupInteresseButtons();
+  if (typeof registrarVisualizacao === "function") {
+    registrarVisualizacao(car.veiculoId);
+  }
 });
