@@ -231,7 +231,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupCounters();
   setupReveal();
 
-  const sheetCars = await fetchCarrosPublicados();
+  const sheetCars = await fetchSheetCars();
   if (sheetCars && sheetCars.length) {
     cars.length = 0;
     cars.push(...sheetCars);
