@@ -449,21 +449,6 @@ h1, h2, h3 { font-family: var(--font-head); line-height: 1.15; color: var(--navy
 .avalie-form input:focus, .avalie-form textarea:focus { outline: none; border-color: var(--blue-500); }
 .avalie-form button { align-self: flex-start; margin-top: 6px; }
 
-/* DEPOIMENTOS */
-.depoimentos { padding: 110px 0; }
-.depoimentos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-.depoimento-card {
-  background: var(--gray-100);
-  border-radius: var(--radius);
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.stars { color: var(--blue-500); letter-spacing: 2px; }
-.depoimento-card p { color: var(--gray-700); font-style: italic; }
-.depoimento-autor { font-weight: 600; font-size: 0.85rem; color: var(--navy-950); }
-
 /* CONTATO */
 .contato { padding: 110px 0; }
 .contato-inner { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: stretch; }
@@ -690,7 +675,6 @@ h1, h2, h3 { font-family: var(--font-head); line-height: 1.15; color: var(--navy
   .nav-toggle { display: flex; }
   .sobre-inner, .financiamento-inner, .avalie-inner, .contato-inner { grid-template-columns: 1fr; }
   .catalogo-grid { grid-template-columns: repeat(2, 1fr); }
-  .depoimentos-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
   .carro-conteudo { grid-template-columns: 1fr; gap: 32px; }
 
