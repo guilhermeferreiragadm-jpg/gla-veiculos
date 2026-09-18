@@ -30,6 +30,9 @@ function ordenarLista(list, ordenar) {
   }
 }
 
+const CATALOGO_LIMITE_INICIAL = 5;
+let catalogoExpandido = false;
+
 function aplicarFiltros() {
   const f = getFiltros();
   let list = cars.filter((car) => {
@@ -41,6 +44,7 @@ function aplicarFiltros() {
     return true;
   });
   list = ordenarLista(list, f.ordenar);
+  catalogoExpandido = false;
   renderCatalogo(list);
 }
 
@@ -57,10 +61,15 @@ function popularFiltroMarca() {
   });
 }
 
+let catalogoListaAtual = [];
+
 function renderCatalogo(list) {
   const grid = document.getElementById("catalogoGrid");
   const resultado = document.getElementById("catalogoResultado");
+  const verMaisWrap = document.getElementById("catalogoVerMais");
   if (!grid) return;
+
+  catalogoListaAtual = list;
 
   if (resultado) {
     resultado.textContent = list.length
@@ -68,7 +77,13 @@ function renderCatalogo(list) {
       : "Nenhum veículo encontrado com esses filtros.";
   }
 
-  grid.innerHTML = list
+  const visiveis = catalogoExpandido ? list : list.slice(0, CATALOGO_LIMITE_INICIAL);
+
+  if (verMaisWrap) {
+    verMaisWrap.hidden = catalogoExpandido || list.length <= CATALOGO_LIMITE_INICIAL;
+  }
+
+  grid.innerHTML = visiveis
     .map((car) => {
       const msg = encodeURIComponent(`Olá! Tenho interesse no ${car.modelo} (${car.ano}) anunciado no site.`);
       return `
@@ -94,6 +109,13 @@ function renderCatalogo(list) {
       </div>`;
     })
     .join("");
+}
+
+function setupCatalogoVerMais() {
+  document.getElementById("catalogoVerMaisBtn")?.addEventListener("click", () => {
+    catalogoExpandido = true;
+    renderCatalogo(catalogoListaAtual);
+  });
 }
 
 function setupFilters() {
@@ -226,6 +248,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   popularFiltroMarca();
   renderCatalogo(cars);
   setupFilters();
+  setupCatalogoVerMais();
   setupAvalieForm();
   setupInteresseButtons();
   setupCounters();

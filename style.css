@@ -391,6 +391,8 @@ h1, h2, h3 { font-family: var(--font-head); line-height: 1.15; color: var(--navy
 .car-cta-whatsapp { background: #e9f9f0; color: #128a4a; }
 .car-cta-whatsapp:hover { background: #25d366; color: var(--white); }
 
+.catalogo-vermais { display: flex; justify-content: center; margin-top: 36px; }
+
 .catalogo-note { text-align: center; color: var(--gray-500); font-size: 0.85rem; margin-top: 36px; }
 
 /* FINANCIAMENTO */
